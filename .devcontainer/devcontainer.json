@@ -1,0 +1,47 @@
+{
+    "name": "Fifth Language Development",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "args": {
+            "FIFTH_VERSION": "0.1.0",
+            "FIFTH_RUNTIME": "linux-x64",
+            "FIFTH_FRAMEWORK": "net8.0"
+        }
+    },
+    // Features to add (optional extensions)
+    "features": {
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {}
+    },
+    // VS Code extensions to install
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-dotnettools.csharp",
+                "ms-vscode.makefile-tools",
+                "EditorConfig.EditorConfig",
+                "streetsidesoftware.code-spell-checker"
+            ],
+            "settings": {
+                "terminal.integrated.defaultProfile.linux": "bash",
+                "files.associations": {
+                    "*.5th": "fifth",
+                    "*.5thproj": "xml"
+                }
+            }
+        }
+    },
+    // Ports to forward (if Fifth has a language server in future)
+    "forwardPorts": [],
+    // Post-creation command
+    "postCreateCommand": ".devcontainer/scripts/post-create.sh",
+    // Run as non-root user
+    "remoteUser": "vscode",
+    // Mount workspace
+    "workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+    "workspaceFolder": "/workspace",
+    // Environment variables
+    "remoteEnv": {
+        "FIFTH_HOME": "/opt/fifth/0.1.0/fifth-0.1.0"
+    }
+}
