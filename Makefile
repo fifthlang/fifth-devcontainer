@@ -1,7 +1,7 @@
 # Makefile for building Fifth Language development container images
 
 # Configuration
-FIFTH_VERSION ?= 0.1.0
+FIFTH_VERSION ?= 0.3.4
 FIFTH_RUNTIME ?= linux-x64
 FIFTH_FRAMEWORK ?= net8.0
 
