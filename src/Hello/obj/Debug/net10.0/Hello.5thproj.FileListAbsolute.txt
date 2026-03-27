@@ -1,5 +1,0 @@
-/workspace/src/Hello/bin/Debug/net10.0/Hello.deps.json
-/workspace/src/Hello/bin/Debug/net10.0/Hello.runtimeconfig.json
-/workspace/src/Hello/obj/Debug/net10.0/Hello.5thproj.CoreCompileInputs.cache
-/workspace/src/Hello/obj/Debug/net10.0/Hello.sourcelink.json
-/workspace/src/Hello/obj/Debug/net10.0/Hello.genruntimeconfig.cache
