@@ -5,34 +5,30 @@ A Docker container image for building and running [Fifth](https://github.com/aab
 ## What's Included
 
 - Ubuntu 22.04 base image
-- Fifth compiler (v0.1.0)
-- .NET Runtime (8.0 by default)
-- Build tools: `make`, `gcc`, `git`, `curl`
+- Fifth compiler tool from NuGet (`Fifth.Compiler.Tool` v0.10.0)
+- Fifth MSBuild SDK from NuGet (`Fifth.Sdk` v0.10.0)
+- .NET SDK 10.0
+- Build tools: `gcc`, `git`, `curl`
 
 ## Quick Start
 
 ### Build the Image Locally
 
 ```bash
-make build-local
+docker build --build-arg FIFTH_VERSION=0.10.0 --build-arg FIFTH_SDK_VERSION=0.10.0 -t fifth:0.10.0 .
 ```
 
 ### Test the Image
 
 ```bash
-make test
-```
-
-### Build and Test in One Step
-
-```bash
-make all
+docker run --rm fifth:0.10.0 fifthc --version
+docker run --rm -v "$(pwd):/workspace" fifth:0.10.0 sh -lc "dotnet tool restore && dotnet build src/Hello/Hello.5thproj"
 ```
 
 ### Run an Interactive Shell
 
 ```bash
-make shell
+docker run --rm -it -v "$(pwd):/workspace" fifth:0.10.0 bash
 ```
 
 ## Pushing to GitHub Container Registry (ghcr.io)
@@ -62,11 +58,14 @@ echo "ghp_xxxxxxxxxxxxxxxxxxxx" | docker login ghcr.io -u aabs --password-stdin
 ### 3. Build and Push
 
 ```bash
-make push
+docker build --build-arg FIFTH_VERSION=0.10.0 --build-arg FIFTH_SDK_VERSION=0.10.0 -t ghcr.io/aabs/fifthlang/fifth:0.10.0 .
+docker tag ghcr.io/aabs/fifthlang/fifth:0.10.0 ghcr.io/aabs/fifthlang/fifth:latest
+docker push ghcr.io/aabs/fifthlang/fifth:0.10.0
+docker push ghcr.io/aabs/fifthlang/fifth:latest
 ```
 
 This will:
-1. Build the image with the full registry name (`ghcr.io/aabs/fifthlang/fifth:0.1.0-net8.0`)
+1. Build the image with the full registry name (`ghcr.io/aabs/fifthlang/fifth:0.10.0`)
 2. Push both the versioned tag and `latest` tag to ghcr.io
 
 ### 4. View Published Images
@@ -75,44 +74,34 @@ Visit: https://github.com/aabs?tab=packages
 
 ## Configuration Options
 
-Override defaults using make variables:
+Override defaults using Docker build args:
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `FIFTH_VERSION` | `0.1.0` | Fifth compiler version |
-| `FIFTH_FRAMEWORK` | `net8.0` | .NET framework version |
-| `FIFTH_RUNTIME` | `linux-x64` | Target runtime |
-| `REGISTRY` | `ghcr.io/aabs/fifthlang` | Container registry |
+| `FIFTH_VERSION` | `0.10.0` | Fifth compiler tool version |
+| `FIFTH_SDK_VERSION` | `0.10.0` | Fifth SDK version label |
 
 ### Examples
 
-Build with a different .NET version:
+Build with a different Fifth tool version:
 ```bash
-make build-local FIFTH_FRAMEWORK=net10.0
+docker build --build-arg FIFTH_VERSION=0.10.0 -t fifth:custom .
 ```
 
 Push to a different registry:
 ```bash
-make push REGISTRY=ghcr.io/myusername
+docker tag fifth:0.10.0 ghcr.io/myusername/fifth:0.10.0
+docker push ghcr.io/myusername/fifth:0.10.0
 ```
 
-## Available Make Targets
+## 5thproj Project Prerequisites
 
-Run `make help` to see all available targets:
+This repository includes the prerequisites used by the Fifth `samples/FullProjectExample` pattern:
 
-```
-  help            Show this help message
-  all             Build and test the image
-  build           Build image with full registry name
-  build-local     Build image for local use
-  build-net8      Build image with .NET 8.0
-  build-net10     Build image with .NET 10.0
-  push            Push image to registry
-  test            Run tests on the built image
-  shell           Start interactive shell in container
-  clean           Remove built images
-  info            Show build configuration
-```
+- `global.json` pins `Fifth.Sdk` to `0.10.0`
+- `.config/dotnet-tools.json` pins `fifthc` (`Fifth.Compiler.Tool`) to `0.10.0`
+- `nuget.config` configures NuGet.org and `Fifth.*` source mapping
+- `src/Hello/Hello.5thproj` demonstrates a minimal SDK-style Fifth project
 
 ## Using the Image
 
@@ -126,14 +115,14 @@ docker pull ghcr.io/aabs/fifthlang/fifth:latest
 
 ```bash
 docker run --rm -v "$(pwd):/workspace" ghcr.io/aabs/fifthlang/fifth:latest \
-    fifth --source myprogram.5th --output myprogram.dll
+    sh -lc "dotnet tool restore && dotnet build src/Hello/Hello.5thproj"
 ```
 
 ### Run a Compiled Program
 
 ```bash
 docker run --rm -v "$(pwd):/workspace" ghcr.io/aabs/fifthlang/fifth:latest \
-    dotnet myprogram.dll
+    dotnet src/Hello/bin/Debug/net10.0/Hello.dll
 ```
 
 ## Using as a VS Code DevContainer
@@ -156,7 +145,7 @@ Create a `.devcontainer` folder in your project with a `devcontainer.json` file:
             ]
         }
     },
-    "postCreateCommand": "fifth --version",
+    "postCreateCommand": "fifthc --version",
     "remoteUser": "root"
 }
 ```
