@@ -33,6 +33,8 @@ docker run --rm -it -v "$(pwd):/workspace" fifth:0.10.0 bash
 
 ## Pushing to GitHub Container Registry (ghcr.io)
 
+This repository also publishes automatically via GitHub Actions when a tag is pushed in the format `vX.Y.Z` (or pre-release variants such as `vX.Y.Z-rc.1`). The published image tag strips the `v` prefix (for example, `v0.10.0` publishes image tag `0.10.0`) and uses the same version for `FIFTH_VERSION` and `FIFTH_SDK_VERSION`.
+
 ### 1. Create a Personal Access Token (PAT)
 
 1. Go to [GitHub Settings → Developer settings → Personal access tokens → Tokens (classic)](https://github.com/settings/tokens)
