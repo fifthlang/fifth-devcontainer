@@ -3,9 +3,8 @@
     "build": {
         "dockerfile": "Dockerfile",
         "args": {
-            "FIFTH_VERSION": "0.1.0",
-            "FIFTH_RUNTIME": "linux-x64",
-            "FIFTH_FRAMEWORK": "net8.0"
+            "FIFTH_VERSION": "0.10.0",
+            "FIFTH_SDK_VERSION": "0.10.0"
         }
     },
     // Features to add (optional extensions)
@@ -18,7 +17,6 @@
         "vscode": {
             "extensions": [
                 "ms-dotnettools.csharp",
-                "ms-vscode.makefile-tools",
                 "EditorConfig.EditorConfig",
                 "streetsidesoftware.code-spell-checker"
             ],
@@ -42,6 +40,6 @@
     "workspaceFolder": "/workspace",
     // Environment variables
     "remoteEnv": {
-        "FIFTH_HOME": "/opt/fifth/0.1.0/fifth-0.1.0"
+        "FIFTH_SDK_VERSION": "0.10.0"
     }
 }
